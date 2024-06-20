@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>weather dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div class="tittle">WEATHER DASHBOARD</div>
+        <div class="stamp">
+            <img src="KARTHIK STAMP.png" alt="developer">
+        </div>
+    </nav>
+    <div >
+        <div class="top">
+            <div class="data">
+                <h1 id="day">Monday</h1>
+                <h1 id="date">28-12-2023</h1>
+                <div id="humidity">
+                    <img src="humidity.png" alt="logo" class="humidity-icon">
+                    <h1>50%</h1>
+                </div>
+                <div id="windspeed">
+                    <img src="windspeed.png" alt="logo" class="humidity-icon">
+                    <h1>20 Km/h</h1>
+                </div>
+            </div>
+            <div class="search-container">
+                <input type="search" placeholder="ENTER CITY NAME">
+                <button type="submit">
+                    <img src="https://uxwing.com/wp-content/themes/uxwing/download/user-interface/search-icon.png" class="search">
+                </button>
+            </div>
+            <div class="t-r">
+                <div class="t-t">
+                    <h1 id="temp">+27°C</h1>
+                </div>
+                <img src="cloud sun.png" alt="img" class="bg-image">
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="card1">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Weather_icon_-_sunny.svg/2048px-Weather_icon_-_sunny.svg.png">
+                <h1 class="nd">2023-12-29</h1>
+                <h1 class="ndt">+27°C</h1>
+            </div>
+            <div class="card2">
+                <img src="https://media.istockphoto.com/id/638707962/vector/cloudy-weather-icon-in-cartoon-style-isolated-on-white-backgroun.jpg?s=612x612&w=0&k=20&c=v949n4vLFAgf5pNgfN0-0g4Xt9rBJexAA0S3CkoQicE=">
+                <h1 class="nd">2023-12-29</h1>
+                <h1 class="ndt">+9°C</h1>
+            </div>
+            <div class="card3">
+                <img src="https://toppng.com/uploads/preview/clouds-sun-and-rain-drops-weather-icon-115330395929z6pn6pvwa.png">
+                <h1 class="nd">2023-12-29</h1>
+                <h1 class="ndt">-2°C</h1>
+            </div>
+            <div class="card4">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Weather_icon_-_sunny.svg/2048px-Weather_icon_-_sunny.svg.png">
+                <h1 class="nd">2023-12-29</h1>
+                <h1 class="ndt">+43°C</h1>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        const apiKey="e988c0f26920510cddadb7c1bfd44cc1";
+        const apiUrl="https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+        const wapiUrl="https://api.openweathermap.org/data/2.5/forecast?units=metric&"
+
+        const searchbox = document.querySelector('.search-container input');
+        const searchbtn = document.querySelector('.search-container button');
+
+        async function checkWeather(city){
+            const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+            const data = await response.json();
+            const lat = data.coord.lat;
+            const lon = data.coord.lon;
+            const weekResponse = await fetch(wapiUrl +`lat=${lat}&lon=${lon}&cnt=5` + `&appid=${apiKey}`);
+            const weekData = await weekResponse.json();
+            console.log(weekData);
+            const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+            const d = new Date();
+            let day = weekday[d.getDay()];
+            var days = d.getDate();
+            var month = d.getMonth() + 1; // Months are zero-based
+            var year = d.getFullYear();
+            let date = days +"-"+month+"-"+year 
+            document.querySelector("#day").innerHTML=day;
+            document.querySelector("#date").innerHTML=date;
+            document.querySelector("#humidity h1").innerHTML=weekData.list[0].main.humidity;
+            document.querySelector("#windspeed h1").innerHTML=weekData.list[0].wind.speed +"Km/h";
+            document.querySelector("#temp").innerHTML=weekData.list[0].main.temp+"°C";
+            //day2 data
+            const date2 ="30-12-2023";//new Date(weekData.list[1].dt_txt).getDate();
+            document.querySelector(".card1 .nd").innerHTML=date2;
+            document.querySelector(".card1 .ndt").innerHTML=weekData.list[1].main.temp+"°C";
+            //day3 data
+            const date3 ="31-12-2023";//new Date(weekData.list[2].dt_txt).getDate();
+            document.querySelector(".card2 .nd").innerHTML=date3;
+            document.querySelector(".card2 .ndt").innerHTML=weekData.list[2].main.temp+"°C";
+            //day4 data
+            const date4 = "01-01-2024";//new Date(weekData.list[3].dt_txt).getDate();
+            document.querySelector(".card3 .nd").innerHTML=date4;
+            document.querySelector(".card3 .ndt").innerHTML=weekData.list[3].main.temp+"°C";
+            //day5 data
+            const date5 ="01-01-2024";//new Date(weekData.list[4].dt_txt).getDate();
+            document.querySelector(".card4 .nd").innerHTML=date5;
+            document.querySelector(".card4 .ndt").innerHTML=weekData.list[4].main.temp+"°C";
+
+        }
+
+        searchbtn.addEventListener("click",()=>{
+            checkWeather(searchbox.value);
+        })
+        
+    </script>
+</body>
+</html>
